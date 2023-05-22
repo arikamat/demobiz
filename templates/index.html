@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Franchise Location Evaluation Tool</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/main.css') }}">
+</head>
+
+<body>
+    <h1>Franchise Location Evaluation Tool</h1>
+    <form onsubmit="return validateFullForm()" action="{{ url_for('process_data') }}" method="post">
+        <label for="zipCodes">Zip Codes:</label>
+        <div class="clear-wrapper">
+            <textarea id="zipCodes" name="zipCodes" rows="10" cols="50"
+                placeholder="Enter one zip code on each line&#10;Example:&#10;33602&#10;33603&#10;33604"></textarea>
+            <br />
+            <a class="clear" type="button" onclick="clearTextarea('zipCodes')">Clear</a>
+        </div>
+        <div id="zipCodeError" class="error-message"></div> <!-- Add a container for the error message -->
+        <br />
+        <label for="keywords">Businesses to Search:</label>
+        <div class="clear-wrapper">
+            <textarea id="keywords" name="keywords" rows="10" cols="50" oninput="validateForm()"
+                placeholder="Enter one business keyword on each line&#10;Example:&#10;Preschool&#10;Daycare&#10;Montessori School"></textarea>
+            <br />
+            <a class="clear" type="button" onclick="clearTextarea('keywords')">Clear</a>
+        </div>
+        <br />
+
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email address" oninput="validateForm()">
+        <br />
+        <button type="submit" id="submitButton" disabled>Email me my reports</button>
+    </form>
+</body>
+
+</html>
+
+<script>
+    function clearTextarea(textareaId) {
+        document.getElementById(textareaId).value = "";
+    }
+    function validateForm() {
+        const zipCodes = document.getElementById("zipCodes").value.trim();
+        const keywords = document.getElementById("keywords").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const submitButton = document.getElementById("submitButton");
+
+        if (zipCodes !== "" && keywords !== "" && email !== "") {
+            submitButton.disabled = false;
+        } else {
+            submitButton.disabled = true;
+        }
+    }
+    function validateFullForm() {
+        const zipCodes = document.getElementById("zipCodes").value.trim();
+        const keywords = document.getElementById("keywords").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const submitButton = document.getElementById("submitButton");
+        const zipCodeError = document.getElementById("zipCodeError");
+
+        // Validate zip codes only when the submit button is clicked
+        const validZipCodes = validateZipCodes(zipCodes);
+
+        if (!validZipCodes) {
+            zipCodeError.textContent = "Invalid zip code(s) entered"; // Display the error message
+            return false; // Prevent form submission
+        }
+        
+
+        // Validate other form fields
+        return zipCodes !== "" && keywords !== "" && email !== ""
+    }
+    function validateZipCodes(zipCodes) {
+        const zipCodeArray = zipCodes.trim().split('\n');
+
+        const zipCodePattern = /^\d{5}$/; // Regular expression pattern for a 5-digit zip code
+
+        for (let i = 0; i < zipCodeArray.length; i++) {
+            const zipCode = zipCodeArray[i].trim();
+            if (!zipCodePattern.test(zipCode)) {
+                return false; // Invalid zip code found
+            }
+        }
+
+        return true; // All zip codes are valid
+    }
+</script>
