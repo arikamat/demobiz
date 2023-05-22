@@ -12,7 +12,6 @@ import os
 load_dotenv()
 
 BING_API_KEY = os.environ.get("BING_API_KEY")
-geo = pgeocode.Nominatim('fr')
 
 class KeywordSingleton:
 	_instance = None
@@ -36,7 +35,18 @@ class KeywordSingleton:
 		return cls._instance
 
 	def get_lat_long(self, zip_code):
-		
+		url = "https://dev.virtualearth.net/REST/v1/Locations?CountryRegion=US&adminDistrict=NJ&postalCode={}&key={}".format(zip_code,BING_API_KEY)
+		status = False
+		while True:
+			try:
+				response = requests.get(url).json()
+				coords = response["resourceSets"][0]["resources"][0]["geocodePoints"][0]["coordinates"]
+				latlon = str(coords[0])+","+str(coords[1])
+				return latlon
+			except:
+				print("stuck in lat_long", zip_code)
+				import pdb; pdb.set_trace()
+				continue
 	
 	
 	def get_url_data(self, keyword, zip_code):
