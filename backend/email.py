@@ -41,9 +41,9 @@ class Emailer:
 		sender_email = EMAIL_ADD
 		sender_password = EMAIL_PWD
 		body = 'Attached are the CSV files.'
-		csv1 = df1.to_csv()
+		csv1 = df1.to_csv(index = False)
 		csv2 = df2.to_csv()
-		csv3 = df3.to_csv()
+		csv3 = df3.to_csv(index = False)
   
 		message = MIMEMultipart()
 		message['From'] = sender_email

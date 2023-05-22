@@ -1,0 +1,3 @@
+celery -A app.celery worker --loglevel INFO -P eventlet   
+python app.py
+

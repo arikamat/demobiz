@@ -4,9 +4,12 @@ import inspect
 from uszipcode import SearchEngine
 import pandas as pd
 from dotenv import load_dotenv
-
 import os
-
+import sys
+ 
+# setting path
+sys.path.append('../static_data')
+from static_data.demo_data import data
 load_dotenv()
 
 CENSUS_API_KEY = os.environ.get("CENSUS_API_KEY")
@@ -19,8 +22,8 @@ class DemographicsSingleton:
 		"population": "B01001_001E",
 		"under_5_male": "B01001_003E",
 		"under_5_female": "B01001_027E",
-		"5_9_male": "B01001_004E",
-		"5_9_female": "B01001_028E",
+		"male_5_9": "B01001_004E",
+		"female_5_9": "B01001_028E",
 		"total_households": "B11016_001E",
 		"median_income": "B19013_001E",
 		"median_housing_val": "B25077_001E",
@@ -29,7 +32,7 @@ class DemographicsSingleton:
 		"college_3": "B15003_023E",
 		"college_4": "B15003_024E",
 		"college_5": "B15003_025E",
-		"25_older_pop": "B15003_001E",
+		"older_25_pop": "B15003_001E",
 		"median_age": "B01002_001E",
 		"renter_occupied": "B25003_003E",
 		"total_occupied": "B25003_001E",
@@ -53,26 +56,7 @@ class DemographicsSingleton:
 			print('Creating new instance')
 			cls._instance = cls.__new__(cls)
 			
-			cls.data_tbles={}
-			for i in cls.d.keys():
-				cls.data_tbles[i]=[]
-			# results=[]
-			for i in cls.d.keys():
-				url = "https://api.census.gov/data/2021/acs/acs5?get=NAME,{}&for=zip%20code%20tabulation%20area:*&key={}".format(cls.d[i],CENSUS_API_KEY)
-				print(url)
-				while True:
-					try:
-						response = requests.get(url)
-						lst = response.json()
-						break
-					except:
-						continue
-				data = {}
-				for j in lst[1:]:
-					# import pdb
-					# pdb.set_trace()
-					data[j[0][-5:]]=float(j[1])
-				cls.data_tbles[i] = data
+			cls.data_tbles = data
 		print("Returning instance")
 		return cls._instance
 
@@ -86,7 +70,7 @@ class DemographicsSingleton:
 		# a= cls.data_tbles["college_3"][i]
 		# a= cls.data_tbles["college_4"][i]
 		# a= cls.data_tbles["college_5"][i]
-		# a= cls.data_tbles["25_older_pop"][i]
+		# a= cls.data_tbles["older_25_pop"][i]
 		status = False
 		while not status:
 			try:
@@ -94,12 +78,12 @@ class DemographicsSingleton:
 					"Zip Code": i,
 					"Population": cls.data_tbles["population"][i],
 					"Children Age 0-5 Years": cls.data_tbles["under_5_male"][i]+cls.data_tbles["under_5_female"][i],
-					"Children Age 5-9 Years": cls.data_tbles["5_9_male"][i]+cls.data_tbles["5_9_female"][i],
-					"Percentage of children (%)": round(100*(cls.data_tbles["under_5_male"][i]+cls.data_tbles["under_5_female"][i]+cls.data_tbles["5_9_male"][i]+cls.data_tbles["5_9_female"][i])/cls.data_tbles["population"][i],2),
+					"Children Age 5-9 Years": cls.data_tbles["male_5_9"][i]+cls.data_tbles["female_5_9"][i],
+					"Percentage of children (%)": round(100*(cls.data_tbles["under_5_male"][i]+cls.data_tbles["under_5_female"][i]+cls.data_tbles["male_5_9"][i]+cls.data_tbles["female_5_9"][i])/cls.data_tbles["population"][i],2),
 					"Total Households": cls.data_tbles["total_households"][i],
 					"Median Household Income ($)": cls.data_tbles["median_income"][i],
 					"Median Housing Value ($)": cls.data_tbles["median_housing_val"][i],
-					"College Degree (%)": round(100*((cls.data_tbles["college_1"][i]+cls.data_tbles["college_2"][i]+cls.data_tbles["college_3"][i]+cls.data_tbles["college_4"][i]+cls.data_tbles["college_5"][i])/ cls.data_tbles["25_older_pop"][i]),2),
+					"College Degree (%)": round(100*((cls.data_tbles["college_1"][i]+cls.data_tbles["college_2"][i]+cls.data_tbles["college_3"][i]+cls.data_tbles["college_4"][i]+cls.data_tbles["college_5"][i])/ cls.data_tbles["older_25_pop"][i]),2),
 					"Median Age": cls.data_tbles["median_age"][i],
 					"Renter Occupied (%)": round(100*(cls.data_tbles["renter_occupied"][i]/cls.data_tbles["total_occupied"][i]),2),
 					"Unemployment Rate (%)": round(100*(cls.data_tbles["unemployment"][i]/cls.data_tbles["workforce"][i]),2),
