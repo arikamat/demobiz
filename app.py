@@ -4,10 +4,17 @@ from backend.demo import DemographicsSingleton
 from backend.email import Emailer
 from backend.keyword import KeywordSingleton
 import re
+from dotenv import load_dotenv
+
+import os
+
+load_dotenv()
+
+BROKER_URL = os.environ.get("REDIS_URL")
 
 
 app = Flask(__name__)
-app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379'
+app.config['CELERY_BROKER_URL'] = BROKER_URL
 celery = make_celery(app)
 
 
