@@ -42,10 +42,10 @@ class Demographics:
 		"islander": "B02001_006E",
 		"other": "B02001_007E",
 		"two_more": "B02001_008E",
-	}
+		}
 		zipcode_query = ','.join(zipcodes)
 		self.data_tbles={}
-		self.zip_codes=[]
+		self.zip_codes=set()
 		for i in self.d.keys():
 			self.data_tbles[i]=[]
 		for i in self.d.keys():
@@ -62,7 +62,7 @@ class Demographics:
 			for j in lst[1:]:
 				zc = j[0][-5:]
 				data[zc]=float(j[1])
-				self.zip_codes.append(zc)
+				self.zip_codes.add(zc)
 			self.data_tbles[i] = data
 
 	def get_data(self, zipcode):
