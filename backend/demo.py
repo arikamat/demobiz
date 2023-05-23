@@ -96,8 +96,8 @@ class Demographics:
 					}
 				return answer
 			except:
-				import pdb
-				pdb.set_trace()
+				# import pdb
+				# pdb.set_trace()
 				print("stuck in get_data")
 				continue
 
