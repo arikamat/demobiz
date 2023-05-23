@@ -1,7 +1,6 @@
 import requests
 import csv
 import inspect
-from uszipcode import SearchEngine
 import pandas as pd
 import numpy as np
 import pgeocode

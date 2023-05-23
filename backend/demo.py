@@ -1,22 +1,22 @@
 import requests
 import csv
 import inspect
-from uszipcode import SearchEngine
 import pandas as pd
 from dotenv import load_dotenv
 import os
 import sys
- 
+import pgeocode
+
 # setting path
 sys.path.append('../static_data')
 from static_data.demo_data import data
 load_dotenv()
 
 CENSUS_API_KEY = os.environ.get("CENSUS_API_KEY")
+geo = pgeocode.Nominatim('us')
 
 class DemographicsSingleton:
 	_instance = None
-	search = SearchEngine()
  
 	d = {
 		"population": "B01001_001E",
@@ -63,16 +63,9 @@ class DemographicsSingleton:
 	@classmethod
 	def get_data(cls, zipcode):
 		i = zipcode
-		z = cls.search.by_zipcode(i)
-		# a= cls.data_tbles["college_1"][i]
-		# print(cls.data_tbles["college_1"][i])
-		# a= cls.data_tbles["college_2"][i]
-		# a= cls.data_tbles["college_3"][i]
-		# a= cls.data_tbles["college_4"][i]
-		# a= cls.data_tbles["college_5"][i]
-		# a= cls.data_tbles["older_25_pop"][i]
-		status = False
-		while not status:
+		z = geo.query_postal_code(i)
+  
+		while True:
 			try:
 				answer = {
 					"Zip Code": i,
@@ -94,15 +87,14 @@ class DemographicsSingleton:
 					"Islander (%)": round(100*(cls.data_tbles["islander"][i]/cls.data_tbles["population"][i]),2),
 					"Other (%)": round(100*(cls.data_tbles["other"][i]/cls.data_tbles["population"][i]),2),
 					"Two or More (%)": round(100*(cls.data_tbles["two_more"][i]/cls.data_tbles["population"][i]),2),
-					"City": z.major_city,
-					"County": z.county
+					"City": z.place_name,
+					"County": z.county_name
 					}
-				status = True
+				return answer
 			except:
 				
 				print("stuck in get_data")
 				continue
-		return answer
 
 	@classmethod
 	def get_all_data(cls, zipcodes):
