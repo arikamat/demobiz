@@ -9,7 +9,7 @@ import pgeocode
 
 # setting path
 sys.path.append('../static_data')
-from static_data.demo_data import data
+# from static_data.demo_data import data
 load_dotenv()
 
 CENSUS_API_KEY = os.environ.get("CENSUS_API_KEY")
@@ -56,7 +56,26 @@ class DemographicsSingleton:
 			print('Creating new instance')
 			cls._instance = cls.__new__(cls)
 			
-			cls.data_tbles = data
+			cls.data_tbles={}
+			for i in cls.d.keys():
+				cls.data_tbles[i]=[]
+			# results=[]
+			for i in cls.d.keys():
+				url = "https://api.census.gov/data/2021/acs/acs5?get=NAME,{}&for=zip%20code%20tabulation%20area:*&key={}".format(cls.d[i],CENSUS_API_KEY)
+				print(url)
+				while True:
+					try:
+						response = requests.get(url)
+						lst = response.json()
+						break
+					except:
+						continue
+				data = {}
+				for j in lst[1:]:
+					# import pdb
+					# pdb.set_trace()
+					data[j[0][-5:]]=float(j[1])
+				cls.data_tbles[i] = data
 		print("Returning instance")
 		return cls._instance
 
