@@ -1,6 +1,6 @@
 from flask import Flask,render_template, request
 from flask_celery import make_celery
-from backend.demo import DemographicsSingleton
+from backend.demo import Demographics
 from backend.email import Emailer
 from backend.keyword import KeywordSingleton
 import re
@@ -41,8 +41,8 @@ def process_data():
 @celery.task(name='get_all_data_send_email')
 def get_all_data_send_email(zip_codes, keywords, email):
 	print("hereeeeeee 0")
-	demographics = DemographicsSingleton.instance()
-	demographics_data = demographics.get_all_data(zip_codes)
+	demographics = Demographics(zip_codes)
+	demographics_data = demographics.get_all_data()
 	print("heeereeeeeee 1")
 	k = KeywordSingleton.instance()
 	k_data = k.get_data(zip_codes, keywords)
@@ -53,6 +53,9 @@ def get_all_data_send_email(zip_codes, keywords, email):
 	print("hereeeeeee 3")
 	emailer.send_email_2_df(email, "Your Franchise Data", k_data_simple, k_piv, demographics_data)
 	print("hereeeeeee 4")
+	del demographics
+	del k_data_simple
+	del k_piv
+	del k_data
 if __name__ == '__main__':
-	DemographicsSingleton.instance()
 	app.run(debug=True, use_reloader=False)
