@@ -66,5 +66,7 @@ class KeywordSingleton:
 		new_df = pd.DataFrame(columns=["Zipcode","Name","Address","Phone","Website"], data=results)
 		new_df = new_df.drop_duplicates(subset=["Zipcode","Name","Address","Phone","Website"])
 		pivot = pd.pivot_table(new_df, values='Name', index='Zipcode', aggfunc='count')
-		pivot = pivot.rename(columns={'Name': 'Number of Businesses'})
+		col_name = 'Total Number of Businesses ({})'.format(', '.join(keywords))
+		pivot = pivot.rename(columns={'Name': col_name})
+		pivot.loc['TOTAL']= pivot.sum(numeric_only=True, axis=0)
 		return new_df, pivot

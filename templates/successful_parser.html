@@ -29,7 +29,7 @@
         }
 
         p {
-            font-size: 12px;
+            font-size: 14px;
             color: #555;
             line-height: 1.5;
         }
@@ -55,10 +55,19 @@
 
 <body>
     <div class="container">
-        <h1>Email Confirmation</h1>
-        <p>Thank you for your submission. You will receive an email shortly with three CSV files attached. One of csv files will provide information about the business locations found in each zip code. The second fill willl contain a summary of each zip code that will inform you of how many relevant businesses were found in each zip_code. The third file will contain the demographics of all the zip codes.</p>
+        <h1>Success! Your email is on its way!</h1>
+        <p>
+            Please check your spam folder for an email from <span style="text-decoration: underline; color: blue;">franchisedataprovider@outlook.com</span>,
+            as it may accidentally end up there. To ensure smooth delivery, consider whitelisting this email address.
+        </p>
+        <p>
+            Congratulations on your successful submission!
+            You're one step closer to accessing valuable information.
+            An email containing three CSV files will be arriving in your inbox shortly.
+            One of the files will provide detailed business locations for each zip code.
+            The second file will summarize the number of relevant businesses in each zip code.
+            Finally, the third file will contain demographic data for all zip codes.</p>
         <a href="{{url_for('index')}}">Make another request</a>
     </div>
 </body>
-
 </html>
