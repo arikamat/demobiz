@@ -2,6 +2,15 @@
 <html>
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9V1HSE31JR"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-9V1HSE31JR');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Confirmation</title>
@@ -57,7 +66,8 @@
     <div class="container">
         <h1>Success! Your email is on its way!</h1>
         <p>
-            Please check your spam folder for an email from <span style="text-decoration: underline; color: blue;">franchisedataprovider@outlook.com</span>,
+            Please check your spam folder for an email from <span
+                style="text-decoration: underline; color: blue;">franchisedataprovider@outlook.com</span>,
             as it may accidentally end up there. To ensure smooth delivery, consider whitelisting this email address.
         </p>
         <p>
@@ -70,4 +80,5 @@
         <a href="{{url_for('index')}}">Make another request</a>
     </div>
 </body>
+
 </html>

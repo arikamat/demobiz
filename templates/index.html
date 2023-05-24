@@ -2,6 +2,15 @@
 <html>
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9V1HSE31JR"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-9V1HSE31JR');
+    </script>
     <title>Franchise Location Evaluation Tool</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/main.css') }}">
 </head>
@@ -66,7 +75,7 @@
             zipCodeError.textContent = "Invalid zip code(s) entered"; // Display the error message
             return false; // Prevent form submission
         }
-        
+
 
         // Validate other form fields
         return zipCodes !== "" && keywords !== "" && email !== ""
